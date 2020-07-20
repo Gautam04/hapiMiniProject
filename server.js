@@ -50,7 +50,7 @@ let init = async function()
 });
 
 User.sync({
-  force:true
+  force:false
 })
 
 
