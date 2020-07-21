@@ -68,11 +68,28 @@ User.sync({
 
 await server.register([inert]);
 
+
+server.route({
+  method:'GET',
+  path:'/js/{param}',
+  handler:function(req,h){
+    return h.file('js/'+req.params.param);
+  }
+});
+
+server.route({
+  method:'GET',
+  path:'/css/{param}',
+  handler:function(req,h){
+    return h.file('css/'+req.params.param);
+  }
+});
+
 server.route({
   method:'GET',
   path:'/',
   handler:function(req,h){
-    return "Returning user or New user?"
+    return h.file("choice.html");
   }
 });
 
