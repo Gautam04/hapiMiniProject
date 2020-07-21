@@ -20,6 +20,18 @@ async function encryptPass(password)
 }
 
 
+async function comparePassword(password,encrypted_password)
+{
+  return new Promise(function(resolve,reject){
+    bcrypt.compare(password,encrypted_password,function(err,flag){
+        if(err)
+        reject(Error(err));
+        else
+        resolve(flag);
+    });
+  });
+}
+
 
 let init = async function()
 {
@@ -114,9 +126,28 @@ server.route({
   handler:async function(req,h)
   {
     let payload = req.payload;
-    let name = payload.name;
+    let email = payload.email;
     let password = payload.password;
     //get record from db
+    let returned_record = await User.findAll({
+      where:{
+        email:email
+
+      }
+    })
+    console.log(returned_record);
+    try{
+      password_flag = await comparePassword(password,returned_record[0].dataValues.password);
+      if(password_flag)
+        return returned_record;
+      else
+        return "Wrong Password, Please try again";
+    }catch(err){
+      console.log(err);
+      return "Error has occured";
+    }
+    // console.log(returned_record);
+    
     //verify password
     //create session for user
   }
